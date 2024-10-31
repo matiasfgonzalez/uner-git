@@ -1,0 +1,22 @@
+.abs-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30vh;
+}
+.form {
+  width: 450px;
+}
+.cardIndex {
+	padding-top: 10px;
+}
+.cardIndexCA {
+	padding-top: 10px;
+	display: none;
+}
+body {
+	background: url(https://i.pinimg.com/originals/3b/ac/02/3bac02674d4b07be7fb4e2b29d7ee7be.jpg) !important;
+	background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+}
