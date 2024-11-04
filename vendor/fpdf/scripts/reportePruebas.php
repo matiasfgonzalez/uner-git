@@ -5,6 +5,11 @@ if ($_POST['mesr'] == "" || $año = $_POST['añor'] == "") {
 }
 $mes = $_POST['mesr'];
 $año = $_POST['añor'];
+
+$firmante = $_POST['firmante'];
+$cargo = $_POST['cargo'];
+$agrupacion = $_POST['agrupacion'];
+
 require('../fpdf/fpdfBis.php');
 
 class PDF extends FPDF
@@ -59,14 +64,14 @@ class PDF extends FPDF
         $this->Cell(0, 7, utf8_decode('Oro Verde, ') . date("d") . " de " . $variableMes . " de " . date("Y"), 0, 1, 'R');
     }
 
-    function FancyTable($año, $mes)
+    function FancyTable($año, $mes, $firmante, $cargo, $agrupacion)
     {
         include_once '../../../php/conexion.php';
         $bd = new BD();
         $conexion = $bd->connect();
 
         $query = $conexion->prepare("select sum(saldo) as saldoNetoCantina from bdunertest.t_fondosymovimientos_cantina
-            where year(fecha) <= ? and month(fecha) <= ? ");
+            where year(fecha) = ? and month(fecha) = ? ");
         $query->bindParam(1, $año, PDO::PARAM_INT);
         $query->bindParam(2, $mes, PDO::PARAM_INT);
 
@@ -82,6 +87,19 @@ class PDF extends FPDF
             $cantidad = $ver['cantidad'];
             $totalRecaudado = $ver['totalRecaudado'];
         }
+
+        /** Datos de movimientos cefca */
+        $queryCefca = $conexion->prepare("select sum(saldo) as saldoNetoCefca from bdunertest.t_fondosymovimientos_cefca
+            where year(fecha) = ? and month(fecha) = ? ");
+        $queryCefca->bindParam(1, $año, PDO::PARAM_INT);
+        $queryCefca->bindParam(2, $mes, PDO::PARAM_INT);
+
+        $queryCefca->execute();
+
+        foreach ($queryCefca as $ver) {
+            $saldoNetoCefca = number_format($ver['saldoNetoCefca'], 0, ",", ".");
+        }
+
         switch ($mes) {
             case '1':
                 $variableMes = "Enero";
@@ -128,7 +146,7 @@ class PDF extends FPDF
         $this->SetY(40);
         $this->SetX(10);
 
-        $this->Cell(0, 7, utf8_decode('BALANCES CEFCA MES AÑO'), 0, 1, 'C');
+        $this->Cell(0, 7, utf8_decode('BALANCES CEFCA MES ' . $variableMes . ' AÑO ' . $año), 0, 1, 'C');
         // Salto de línea
         $this->Ln(20);
 
@@ -139,16 +157,16 @@ class PDF extends FPDF
         $textoLorem = "    La secretaria de Finanzas del Centro de Estudiandes de la Facultad de Ciencias Agropecuarias hace presente el balance mes " . $variableMes . " del año " . $año . " correspondiente a cantina, fotocopiadora y fondo CEFCA.
         En cuanto a cantina se finalizo el mes " . $variableMes . " con un saldo neto de $" . $saldoNetoCantina . "; habiendo cumplido con todos sus haberes y pagos correspondientes.
         Respecto a fotocopiadora, el mes de " . $variableMes . " finalizo con un saldo neto de $" . "VARIABLE" . "; quedando saldadas las cuentas por servicio de alquiler de fotocopiadoras, proveedores y pagos de becarios.
-        Por último, en cuanto a fondo CEFCA, el mismo finalizo " . $variableMes . " con un saldo de $" . "VARIABLE" . "; cumpliendo con todos los gastos correspondientes incluyendo becas, sueldos, inversiones, compras de equipamiento, eventos festivos y mejoras a los servicios que el CEFCA brinda a los estudiantes.";
+        Por último, en cuanto a fondo CEFCA, el mismo finalizo " . $variableMes . " con un saldo de $" . $saldoNetoCefca . "; cumpliendo con todos los gastos correspondientes incluyendo becas, sueldos, inversiones, compras de equipamiento, eventos festivos y mejoras a los servicios que el CEFCA brinda a los estudiantes.";
 
         //$this->Cell(280,7,utf8_decode($textoLorem) ,0,1,'L');
         $this->SetFillColor(255, 255, 255);
         $this->MultiCell(190, 8, utf8_decode($textoLorem), 0, 1, 'FJ', 0);
         $this->Ln(20);
         $this->SetY(225);
-        $this->Cell(0, 7, utf8_decode('Volker Scharton Maximiliano'), 0, 1, 'C');
-        $this->Cell(0, 7, utf8_decode('Sec. De Finanzas CEFCA-UNER'), 0, 1, 'C');
-        $this->Cell(0, 7, utf8_decode('"Conducción Resiliar"'), 0, 1, 'C');
+        $this->Cell(0, 7, utf8_decode($firmante), 0, 1, 'C');
+        $this->Cell(0, 7, utf8_decode($cargo), 0, 1, 'C');
+        $this->Cell(0, 7, utf8_decode($agrupacion), 0, 1, 'C');
     }
 }
 
@@ -161,6 +179,6 @@ $pdf->SetFont('Arial', '', 10);
 //$pdf->AddPage();
 //$pdf->ImprovedTable($header,$data);
 $pdf->AddPage('portrait', 'A4');
-$pdf->FancyTable($año, $mes);
+$pdf->FancyTable($año, $mes, $firmante, $cargo, $agrupacion);
 $cadena = "Reporte_Archivo_Tipo_A_Mes_" . $mes . "_Anio_" . $año . ".pdf";
 $pdf->Output('I', $cadena);

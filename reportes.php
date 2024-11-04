@@ -77,6 +77,21 @@ if (!isset($_SESSION['username'])) {
                 <input type="number" class="form-control" id="inputEmail4" name="añor">
               </div>
             </div>
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label for="firmante">Firmante</label>
+                <input type="text" class="form-control" id="firmante" name="firmante">
+              </div>
+              <div class="form-group col-md-4">
+                <label for="cargo">Cargo</label>
+                <input type="text" class="form-control" id="cargo" name="cargo">
+              </div>
+              <div class="form-group col-md-4">
+                <label for="agrupacion">Agrupación</label>
+                <input type="text" class="form-control" id="agrupacion" name="agrupacion">
+              </div>
+
+            </div>
             <button type="submit" class="btn btn-danger"><i class="far fa-file-pdf"></i> Generar</button>
           </form>
           <!-- Divider -->
