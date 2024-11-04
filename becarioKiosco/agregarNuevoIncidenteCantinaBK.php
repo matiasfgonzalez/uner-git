@@ -1,15 +1,15 @@
-<?php 
+<?php
 
-  session_start();
+session_start();
 
-  if(!isset($_SESSION['username'])){
-    $errorLogin= "Debe registrarse primero<br>";
-    header('location: ../login.php?errorLogin='.$errorLogin);
-  }{
-    if($_SESSION['rol'] != 2){
-    header('location: ../php/definirRutas.php');  
-    }
+if (!isset($_SESSION['username'])) {
+  $errorLogin = "Debe registrarse primero<br>";
+  header('location: ../login.php?errorLogin=' . $errorLogin);
+} {
+  if ($_SESSION['rol'] != 2) {
+    header('location: ../php/definirRutas.php');
   }
+}
 
 ?>
 <!DOCTYPE html>
@@ -39,11 +39,11 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <?php 
-      include 'navegacionLateralBK.php'; 
+    <?php
+    include 'navegacionLateralBK.php';
     ?>
 
-     <!--Content Wrapper -->
+    <!--Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
@@ -56,29 +56,29 @@
 
           <!-- Page Heading -->
           <h1 class="h3 mb-4 text-gray-800">Agregar nuevo incidente en cantina</h1>
-              <?php if(isset($_GET['info'])){ ?>
-                <div class="alert alert-success" role="alert" style="text-align: center;">
-                  <?php 
-                    if(isset($_GET['info'])){
-                        echo $_GET['info'];
-                      }
-                  ?>
-                </div>
-              <?php } ?>
-              <?php if(isset($_GET['error'])){ ?>
-                <div class="alert alert-danger" role="alert" style="text-align: center;">
-                  <?php 
-                    if(isset($_GET['error'])){
-                        echo $_GET['error'];
-                      }
-                  ?>
-                </div>
-              <?php } ?>
-          <form method="POST" action="agregarIncidenteCantinaBKBD.php" >
+          <?php if (isset($_GET['info'])) { ?>
+            <div class="alert alert-success" role="alert" style="text-align: center;">
+              <?php
+              if (isset($_GET['info'])) {
+                echo $_GET['info'];
+              }
+              ?>
+            </div>
+          <?php } ?>
+          <?php if (isset($_GET['error'])) { ?>
+            <div class="alert alert-danger" role="alert" style="text-align: center;">
+              <?php
+              if (isset($_GET['error'])) {
+                echo $_GET['error'];
+              }
+              ?>
+            </div>
+          <?php } ?>
+          <form method="POST" action="agregarIncidenteCantinaBKBD.php">
             <div class="form-row">
               <div class="form-group col-md-4">
                 <label for="inputEmail4">Fecha</label>
-                <input type="date" class="form-control" id="inputEmail4" name="fechai" >
+                <input type="date" class="form-control" id="inputEmail4" name="fechai">
               </div>
               <div class="form-group col-md-4">
                 <label for="inputCity">Saldo</label>
@@ -91,10 +91,10 @@
               </div>
               <div class="form-group col-md-4">
                 <label for="inputCity">Tipo (Entrada/Salida)</label>
-                <select class="form-control" id="exampleFormControlSelect1" name="tipoincidente"> 
-                    <option value="so">Elija una opcion</option>
-                    <option value="entrada">Entrada</option>
-                    <option value="salida">Salida</option>
+                <select class="form-control" id="exampleFormControlSelect1" name="tipoincidente">
+                  <option value="so">Elija una opcion</option>
+                  <option value="entrada">Entrada</option>
+                  <option value="salida">Salida</option>
                 </select>
               </div>
             </div>
