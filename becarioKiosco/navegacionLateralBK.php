@@ -34,10 +34,6 @@
       <i class="fas fa-cash-register"></i>
       <span>Vender</span>
     </a>
-    <a class="nav-link" href="agregarNuevoIncidenteCantinaBK.php">
-      <i class="fas fa-plus"></i>
-      <span>Agregar incidente</span>
-    </a>
     <a class="nav-link" href="actualizarStockBK.php">
       <i class="fas fa-truck-loading"></i>
       <span>Actualizar producto</span>
