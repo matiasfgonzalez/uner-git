@@ -1,15 +1,15 @@
-<?php 
+<?php
 
-  session_start();
+session_start();
 
-  if(!isset($_SESSION['username'])){
-    $errorLogin= "Debe registrarse primero<br>";
-    header('location: ../login.php?errorLogin='.$errorLogin);
-  }{
-    if($_SESSION['rol'] != 1){
-    header('location: php/definirRutas.php');  
-    }
+if (!isset($_SESSION['username'])) {
+  $errorLogin = "Debe registrarse primero<br>";
+  header('location: ../login.php?errorLogin=' . $errorLogin);
+} {
+  if ($_SESSION['rol'] != 1) {
+    header('location: php/definirRutas.php');
   }
+}
 
 ?>
 <!DOCTYPE html>
@@ -39,11 +39,11 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <?php 
-      include 'navegacionLateral.php'; 
+    <?php
+    include 'navegacionLateral.php';
     ?>
 
-     <!--Content Wrapper -->
+    <!--Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
@@ -57,8 +57,8 @@
           <!-- Page Heading -->
           <div class="card" style="text-align: center;">
             <div class="card-header">
-              <h3 style="color: black;">Reportes 
-                  <i class="far fa-file-pdf"></i>
+              <h3 style="color: black;">Reportes
+                <i class="far fa-file-pdf"></i>
               </h3>
             </div>
           </div>
@@ -70,14 +70,14 @@
             <div class="form-row">
               <div class="form-group col-md-4">
                 <label for="inputEmail4">Mes</label>
-                <input type="number" class="form-control" id="inputEmail4" name="mesr" >
+                <input type="number" class="form-control" id="inputEmail4" name="mesr">
               </div>
               <div class="form-group col-md-4">
                 <label for="inputEmail4">Año</label>
-                <input type="number" class="form-control" id="inputEmail4" name="añor" >
+                <input type="number" class="form-control" id="inputEmail4" name="añor">
               </div>
             </div>
-              <button type="submit" class="btn btn-danger"><i class="far fa-file-pdf"></i> Generar</button>
+            <button type="submit" class="btn btn-danger"><i class="far fa-file-pdf"></i> Generar</button>
           </form>
           <!-- Divider -->
           <hr class="sidebar-divider">
