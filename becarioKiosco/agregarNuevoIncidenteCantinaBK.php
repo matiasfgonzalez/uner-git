@@ -1,5 +1,7 @@
 <?php
 
+header('location: ../becarioKiosco/ventaBK.php');
+
 session_start();
 
 if (!isset($_SESSION['username'])) {
