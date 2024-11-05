@@ -1,15 +1,15 @@
-<?php 
+<?php
 
-  session_start();
+session_start();
 
-  if(!isset($_SESSION['username'])){
-    $errorLogin= "Debe registrarse primero<br>";
-    header('location: ../login.php?errorLogin='.$errorLogin);
-  }{
-    if($_SESSION['rol'] != 2){
-    header('location: ../php/definirRutas.php');  
-    }
+if (!isset($_SESSION['username'])) {
+  $errorLogin = "Debe registrarse primero<br>";
+  header('location: ../login.php?errorLogin=' . $errorLogin);
+} {
+  if ($_SESSION['rol'] != 2) {
+    header('location: ../php/definirRutas.php');
   }
+}
 
 ?>
 <!DOCTYPE html>
@@ -48,11 +48,11 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <?php 
-      include 'navegacionLateralBK.php'; 
+    <?php
+    include 'navegacionLateralBK.php';
     ?>
 
-     <!--Content Wrapper -->
+    <!--Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
@@ -66,24 +66,24 @@
           <!-- Page Heading 
           <h1 class="h3 mb-4 text-gray-800">Ventas</h1>-->
 
-              <div class="modal-body">
-              <label>Codigo de barra</label>
-              <form>
+          <div class="modal-body">
+            <label>Codigo de barra</label>
+            <form>
               <div style="display: flex;">
                 <div class="input-group mb-2">
                   <div class="input-group-prepend">
                     <div class="input-group-text"><i class="fas fa-barcode"></i></div>
                   </div>
-                  <input type="number" name="" class="form-control input-sm" id="codigodebarra" autofocus >
+                  <input type="number" name="" class="form-control input-sm" id="codigodebarra" autofocus>
                 </div>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" id="agregarnuevo">Agregar</button>
               </div>
-              </form>
-              </div>
+            </form>
+          </div>
           <div id="tabla">
           </div>
-        <!-- Modal para nuevos -->
-        <!-- Modal -->
+          <!-- Modal para nuevos -->
+          <!-- Modal -->
         </div>
         <!-- /.container-fluid -->
 
@@ -144,38 +144,38 @@
 
 </html>
 <script type="text/javascript">
-  $(document).ready(function(){
+  $(document).ready(function() {
     $('#tabla').load('componentes/tabla.php');
   });
 </script>
 <script type="text/javascript">
-  $(document).ready(function(){
-    $('#agregarnuevo').click(function(){
-      codigodebarra=$('#codigodebarra').val();
+  $(document).ready(function() {
+    $('#agregarnuevo').click(function() {
+      codigodebarra = $('#codigodebarra').val();
       agregardatos(codigodebarra);
       $('#codigodebarra').val('');
       $('#codigodebarra').focus();
     });
 
-  $('#actualizardatos').click(function(){
-    actualizadatos();
-  });
+    $('#actualizardatos').click(function() {
+      actualizadatos();
+    });
 
   });
 </script>
 <!-- Captura los eventos del teclado el enter y la q-->
 <script type="text/javascript">
-  $(document).ready(function(){     
-      $("#codigodebarra").keypress(function(e) {
-        if(e.which == 13) {
-          codigodebarra=$('#codigodebarra').val();
-          agregardatos(codigodebarra);
-          $('#codigodebarra').val('');
-          $('#codigodebarra').focus();
-        }
-        if(e.which == 113) {
-          confirmarventa();
-        }
-      });
-});
+  $(document).ready(function() {
+    $("#codigodebarra").keypress(function(e) {
+      if (e.which == 13) {
+        codigodebarra = $('#codigodebarra').val();
+        agregardatos(codigodebarra);
+        $('#codigodebarra').val('');
+        $('#codigodebarra').focus();
+      }
+      if (e.which == 113) {
+        confirmarventa();
+      }
+    });
+  });
 </script>
