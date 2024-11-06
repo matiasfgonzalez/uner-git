@@ -77,12 +77,12 @@ if (!isset($_SESSION['username'])) {
           <form method="POST" action="agregarNuevoProductoBD.php">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="inputEmail4">Nombre del producto</label>
-                <input type="text" class="form-control" id="inputEmail4" placeholder="" name="nombreDelProducto">
+                <label for="nombreDelProducto">Nombre del producto</label>
+                <input type="text" class="form-control" id="nombreDelProducto" placeholder="" name="nombreDelProducto">
               </div>
               <div class="form-group col-md-6">
-                <label for="inputCity">Categoria</label>
-                <select class="form-control" id="exampleFormControlSelect1" name="categoriaDelProducto">
+                <label for="categoriaDelProducto">Categoria</label>
+                <select class="form-control" id="categoriaDelProducto" name="categoriaDelProducto">
                   <option value="so">Elija una opcion</option>
                   <option value="Cantina">Cantina</option>
                   <option value="Fotocopiadora">Fotocopiadora</option>
@@ -91,21 +91,21 @@ if (!isset($_SESSION['username'])) {
             </div>
             <div class="form-row">
               <div class="form-group col-md-4">
-                <label for="inputCity">Precio</label>
+                <label for="precioDelProducto">Precio</label>
                 <div class="input-group mb-2">
                   <div class="input-group-prepend">
                     <div class="input-group-text">$</div>
                   </div>
-                  <input type="number" class="form-control" id="inputCity" name="precioDelProducto">
+                  <input type="number" class="form-control" id="precioDelProducto" name="precioDelProducto">
                 </div>
               </div>
               <div class="form-group col-md-4">
-                <label for="inputCity">Stock</label>
-                <input type="number" class="form-control" id="inputCity" name="stockDelProducto">
+                <label for="stockDelProducto">Stock</label>
+                <input type="number" class="form-control" id="stockDelProducto" name="stockDelProducto">
               </div>
               <div class="form-group col-md-4">
-                <label for="inputCity">Codigo de barra</label>
-                <input type="number" class="form-control" id="inputCity" name="codigoDeBarraDelProducto">
+                <label for="codigoDeBarraDelProducto">Codigo de barra</label>
+                <input type="number" class="form-control" id="codigoDeBarraDelProducto" name="codigoDeBarraDelProducto">
               </div>
             </div>
             <button type="submit" class="btn btn-primary">Cargar</button>

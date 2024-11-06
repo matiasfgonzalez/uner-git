@@ -23,15 +23,15 @@ try {
         $bd = new BD();
         $conexion = $bd->connect();
         $query = $conexion->prepare('INSERT INTO bdunertest.t_productos VALUES 
-                                (:codigo2 ,:nombre, :stock, :precio, :categoria, :codigo)');
+                                (:id ,:nombre, :precio, :stock, :categoria, :codigodebarra)');
 
+        $query->bindParam(':id', $codigo);
         $query->bindParam(':nombre', $nombre);
-        $query->bindParam(':categoria', $categoria);
         $query->bindParam(':precio', $precio);
         $query->bindParam(':stock', $stock);
-        $query->bindParam(':codigo', $codigo);
+        $query->bindParam(':categoria', $categoria);
+        $query->bindParam(':codigodebarra', $codigo);
 
-        $query->bindParam(':codigo2', $codigo);
 
         $query->execute();
         $query = NULL;
