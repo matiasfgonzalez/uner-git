@@ -1,18 +1,18 @@
-﻿<?php 
+﻿<?php
 
-  session_start();
+session_start();
 
-  if(!isset($_SESSION['username'])){
-    $errorLogin= "Debe registrarse primero<br>";
-    header('location: ../login.php?errorLogin='.$errorLogin);
-  }{
-    if($_SESSION['rol'] != 2){
-    header('location: ../php/definirRutas.php');  
-    }
+if (!isset($_SESSION['username'])) {
+  $errorLogin = "Debe registrarse primero<br>";
+  header('location: ../login.php?errorLogin=' . $errorLogin);
+} {
+  if ($_SESSION['rol'] != 2) {
+    header('location: ../php/definirRutas.php');
   }
+}
 
-  require_once "php/conexion.php";
-  $conexion=conexion();
+require_once "php/conexion.php";
+$conexion = conexion();
 ?>
 
 <!DOCTYPE html>
@@ -45,11 +45,11 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <?php 
-      include 'navegacionLateralBK.php';
+    <?php
+    include 'navegacionLateralBK.php';
     ?>
 
-     <!--Content Wrapper -->
+    <!--Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
@@ -61,8 +61,8 @@
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Productos vendidos hoy</h1>
-          <p class="mb-4">Aqui se va a mosrtar los productos vendidos en el dia. De los cuales se va a mostrar las siguientes caracteristicas:</p>
+          <h1 class="h3 mb-2 text-gray-800">Ventas realizadas hoy</h1>
+          <p class="mb-4">Aqui se va a mosrtar las ventas realizadas en el dia por usted. De los cuales se va a mostrar las siguientes caracteristicas:</p>
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
@@ -71,7 +71,7 @@
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                 <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th>Nombre</th>
@@ -91,21 +91,21 @@
                     </tr>
                   </tfoot>
                   <tbody>
-                    <?php 
-                      $sql="select * from t_productosv where year(now()) = year(fechaDeVendido) and month(now()) = month(fechaDeVendido) and day(now()) = day(fechaDeVendido)";
-                      $resultado=mysqli_query($conexion,$sql);
-                      while ($ver = mysqli_fetch_assoc($resultado)) {
+                    <?php
+                    $sql = "select * from t_productosv where year(now()) = year(fechaDeVendido) and month(now()) = month(fechaDeVendido) and day(now()) = day(fechaDeVendido)";
+                    $resultado = mysqli_query($conexion, $sql);
+                    while ($ver = mysqli_fetch_assoc($resultado)) {
                     ?>
-                    <tr>
-                      <td><?php echo $ver['nombre']; ?></td>
-                      <td>$ <?php echo $ver['precio']; ?></td>
-                      <td><?php echo $ver['categoria']; ?></td>
-                      <td><?php echo $ver['codigodebarra']; ?></td>
-                      <td><?php echo $ver['fechaDeVendido'];?> </td>
-                    </tr>
-                  <?php 
+                      <tr>
+                        <td><?php echo $ver['nombre']; ?></td>
+                        <td>$ <?php echo $ver['precio']; ?></td>
+                        <td><?php echo $ver['categoria']; ?></td>
+                        <td><?php echo $ver['codigodebarra']; ?></td>
+                        <td><?php echo $ver['fechaDeVendido']; ?> </td>
+                      </tr>
+                    <?php
                     }
-                  ?>
+                    ?>
                   </tbody>
                 </table>
               </div>
