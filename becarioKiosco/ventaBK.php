@@ -74,6 +74,12 @@ if (!isset($_SESSION['username'])) {
                   <div class="input-group-prepend">
                     <div class="input-group-text"><i class="fas fa-barcode"></i></div>
                   </div>
+                  <input type="number" name="" class="form-control input-sm" id="cantidadProductos" value="1">
+                </div>
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text"><i class="fas fa-barcode"></i></div>
+                  </div>
                   <input type="number" name="" class="form-control input-sm" id="codigodebarra" autofocus>
                 </div>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" id="agregarnuevo">Agregar</button>
@@ -152,7 +158,9 @@ if (!isset($_SESSION['username'])) {
   $(document).ready(function() {
     $('#agregarnuevo').click(function() {
       codigodebarra = $('#codigodebarra').val();
-      agregardatos(codigodebarra);
+      cantidadProductos = $('#cantidadProductos').val();
+      buscarProducto(codigodebarra, cantidadProductos);
+      $('#cantidadProductos').val(1);
       $('#codigodebarra').val('');
       $('#codigodebarra').focus();
     });
@@ -169,13 +177,16 @@ if (!isset($_SESSION['username'])) {
     $("#codigodebarra").keypress(function(e) {
       if (e.which == 13) {
         codigodebarra = $('#codigodebarra').val();
-        agregardatos(codigodebarra);
+        cantidadProductos = $('#cantidadProductos').val();
+        buscarProducto(codigodebarra, cantidadProductos);
+        $('#cantidadProductos').val(1);
         $('#codigodebarra').val('');
         $('#codigodebarra').focus();
       }
+      /*
       if (e.which == 113) {
         confirmarventa();
-      }
+      }*/
     });
   });
 </script>

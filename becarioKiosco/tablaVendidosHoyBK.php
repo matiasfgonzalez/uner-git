@@ -1,14 +1,15 @@
 ﻿<?php
-
 session_start();
 
 if (!isset($_SESSION['username'])) {
-  $errorLogin = "Debe registrarse primero<br>";
-  header('location: ../login.php?errorLogin=' . $errorLogin);
-} {
-  if ($_SESSION['rol'] != 2) {
-    header('location: ../php/definirRutas.php');
-  }
+  $errorLogin = "Debe registrarse primero";
+  header('Location: ../login.php?errorLogin=' . urlencode($errorLogin));
+  exit;
+}
+
+if ($_SESSION['rol'] != 2) {
+  header('Location: ../php/definirRutas.php');
+  exit;
 }
 
 require_once "php/conexion.php";
@@ -67,43 +68,55 @@ $conexion = conexion();
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Productos</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Ventas</h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
                 <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>Nombre</th>
-                      <th>Precio</th>
-                      <th>Categoria</th>
-                      <th>Codigo de barra</th>
-                      <th>Horario y Dia</th>
+                      <th>ID</th>
+                      <th>TOTAL</th>
+                      <th>METODO DE PAGO</th>
+                      <th>VENDEDOR</th>
+                      <th>FECHA</th>
+                      <th>ACCIONES</th>
                     </tr>
                   </thead>
                   <tfoot>
                     <tr>
-                      <th>Nombre</th>
-                      <th>Precio</th>
-                      <th>Categoria</th>
-                      <th>Codigo de barra</th>
-                      <th>Horario y Dia</th>
+                      <th>ID</th>
+                      <th>TOTAL</th>
+                      <th>METODO DE PAGO</th>
+                      <th>VENDEDOR</th>
+                      <th>FECHA</th>
+                      <th>ACCIONES</th>
                     </tr>
                   </tfoot>
                   <tbody>
                     <?php
-                    $sql = "select * from t_productosv where year(now()) = year(fechaDeVendido) and month(now()) = month(fechaDeVendido) and day(now()) = day(fechaDeVendido)";
+                    $sql = "SELECT * FROM t_ventas WHERE YEAR(NOW()) = YEAR(fecha) AND MONTH(NOW()) = MONTH(fecha) AND DAY(NOW()) = DAY(fecha)";
                     $resultado = mysqli_query($conexion, $sql);
-                    while ($ver = mysqli_fetch_assoc($resultado)) {
+
+                    if ($resultado) {
+                      while ($ver = mysqli_fetch_assoc($resultado)) {
                     ?>
-                      <tr>
-                        <td><?php echo $ver['nombre']; ?></td>
-                        <td>$ <?php echo $ver['precio']; ?></td>
-                        <td><?php echo $ver['categoria']; ?></td>
-                        <td><?php echo $ver['codigodebarra']; ?></td>
-                        <td><?php echo $ver['fechaDeVendido']; ?> </td>
-                      </tr>
+                        <tr>
+                          <td><?php echo htmlspecialchars($ver['id_venta']); ?></td>
+                          <td>$ <?php echo htmlspecialchars($ver['total']); ?></td>
+                          <td><?php echo htmlspecialchars($ver['metodo_pago']); ?></td>
+                          <td><?php echo htmlspecialchars($ver['usuario_alta']); ?></td>
+                          <td><?php echo htmlspecialchars($ver['fecha']); ?></td>
+                          <td class="text-center">
+                            <button type="button" class="btn btn-info" id="ver-venta" onclick="modalVerVenta(<?php echo $ver['id_venta']; ?>)">
+                              <i class="fa fa-eye" aria-hidden="true"></i> Ver
+                            </button>
+                          </td>
+                        </tr>
                     <?php
+                      }
+                    } else {
+                      echo "<tr><td colspan='6' class='text-center'>No se encontraron resultados para el dia de la fecha.</td></tr>";
                     }
                     ?>
                   </tbody>
@@ -158,6 +171,45 @@ $conexion = conexion();
     </div>
   </div>
 
+  <!-- Modal para mostrar los detalles de la venta -->
+  <div class="modal fade" id="detalleVentaModal" tabindex="-1" role="dialog" aria-labelledby="detalleVentaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detalleVentaModalLabel">Detalles de la Venta</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Código de Barra</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+                <th>Fecha Alta</th>
+                <th>Usuario Alta</th>
+              </tr>
+            </thead>
+            <tbody id="detalleVentaBody">
+              <!-- Aquí se insertarán los detalles de la venta -->
+            </tbody>
+          </table>
+          <!-- Total de la venta -->
+          <div class="text-right font-weight-bold">
+            Total de la Venta: $<span id="totalVenta"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <!-- Bootstrap core JavaScript-->
   <script src="../vendor/jquery/jquery.min.js"></script>
   <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -174,6 +226,49 @@ $conexion = conexion();
 
   <!-- Page level custom scripts -->
   <script src="../js/demo/datatables-demo.js"></script>
+
+  <script type="text/javascript">
+    const modalVerVenta = async (idVenta) => {
+      try {
+        const response = await fetch(`php/obtenerDatosDeVenta.php?id_venta=${idVenta}`);
+        const data = await response.json();
+
+        if (response.ok) {
+          const productos = data.productos;
+          const totalVenta = data.totalVenta;
+
+          // Limpiar el contenido del cuerpo del modal
+          const detalleVentaBody = document.getElementById("detalleVentaBody");
+          detalleVentaBody.innerHTML = "";
+
+          // Insertar cada producto en una fila de la tabla
+          productos.forEach(producto => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+          <td>${producto.codigodebarra}</td>
+          <td>${producto.cantidad}</td>
+          <td>$ ${producto.precio_unitario}</td>
+          <td>$ ${producto.subtotal}</td>
+          <td>${producto.fecha_alta}</td>
+          <td>${producto.usuario_alta}</td>
+        `;
+            detalleVentaBody.appendChild(row);
+          });
+
+          // Mostrar el total de la venta en el modal
+          document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
+
+          // Mostrar el modal
+          $('#detalleVentaModal').modal('show');
+        } else {
+          alert("Error al obtener los datos de la venta: " + (data.error || "Error desconocido"));
+        }
+      } catch (error) {
+        console.error("Error al obtener los detalles de la venta:", error);
+        alert("Ocurrió un error al obtener los detalles de la venta.");
+      }
+    };
+  </script>
 
 </body>
 
