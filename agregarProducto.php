@@ -1,15 +1,15 @@
-<?php 
+<?php
 
-  session_start();
+session_start();
 
-  if(!isset($_SESSION['username'])){
-    $errorLogin= "Debe registrarse primero<br>";
-    header('location: ../login.php?errorLogin='.$errorLogin);
-  }{
-    if($_SESSION['rol'] != 1){
-    header('location: php/definirRutas.php');  
-    }
+if (!isset($_SESSION['username'])) {
+  $errorLogin = "Debe registrarse primero<br>";
+  header('location: ../login.php?errorLogin=' . $errorLogin);
+} {
+  if ($_SESSION['rol'] != 1) {
+    header('location: php/definirRutas.php');
   }
+}
 
 ?>
 <!DOCTYPE html>
@@ -39,11 +39,11 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <?php 
-      include 'navegacionLateral.php'; 
+    <?php
+    include 'navegacionLateral.php';
     ?>
 
-     <!--Content Wrapper -->
+    <!--Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
@@ -56,24 +56,24 @@
 
           <!-- Page Heading -->
           <h1 class="h3 mb-4 text-gray-800">Agregar producto a la base de datos</h1>
-              <?php if(isset($_GET['info'])){ ?>
-                <div class="alert alert-success" role="alert" style="text-align: center;">
-                  <?php 
-                    if(isset($_GET['info'])){
-                        echo $_GET['info'];
-                      }
-                  ?>
-                </div>
-              <?php } ?>
-              <?php if(isset($_GET['error'])){ ?>
-                <div class="alert alert-danger" role="alert" style="text-align: center;">
-                  <?php 
-                    if(isset($_GET['error'])){
-                        echo $_GET['error'];
-                      }
-                  ?>
-                </div>
-              <?php } ?>
+          <?php if (isset($_GET['info'])) { ?>
+            <div class="alert alert-success" role="alert" style="text-align: center;">
+              <?php
+              if (isset($_GET['info'])) {
+                echo $_GET['info'];
+              }
+              ?>
+            </div>
+          <?php } ?>
+          <?php if (isset($_GET['error'])) { ?>
+            <div class="alert alert-danger" role="alert" style="text-align: center;">
+              <?php
+              if (isset($_GET['error'])) {
+                echo $_GET['error'];
+              }
+              ?>
+            </div>
+          <?php } ?>
           <form method="POST" action="agregarNuevoProductoBD.php">
             <div class="form-row">
               <div class="form-group col-md-6">
@@ -82,10 +82,10 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="inputCity">Categoria</label>
-                <select class="form-control" id="exampleFormControlSelect1" name="categoriaDelProducto"> 
-                    <option value="so">Elija una opcion</option>
-                    <option value="Cantina">Cantina</option>
-                    <option value="Fotocopiadora">Fotocopiadora</option>
+                <select class="form-control" id="exampleFormControlSelect1" name="categoriaDelProducto">
+                  <option value="so">Elija una opcion</option>
+                  <option value="Cantina">Cantina</option>
+                  <option value="Fotocopiadora">Fotocopiadora</option>
                 </select>
               </div>
             </div>
@@ -97,7 +97,7 @@
                     <div class="input-group-text">$</div>
                   </div>
                   <input type="number" class="form-control" id="inputCity" name="precioDelProducto">
-              </div>
+                </div>
               </div>
               <div class="form-group col-md-4">
                 <label for="inputCity">Stock</label>
