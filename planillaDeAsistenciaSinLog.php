@@ -1,8 +1,8 @@
-<?php 
-  session_start();
-  if (isset($_SESSION['rol'])) {
-    header('location: php/definirRutas.php');
-  }
+<?php
+session_start();
+if (isset($_SESSION['rol'])) {
+  header('location: php/definirRutas.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,25 +39,26 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <?php 
-                      include_once 'php/conexion.php';
-                      $bd = new BD();
-                      $conexion = $bd->connect();
-                      $query = $conexion->prepare('SELECT * FROM bdunertest.t_planilladeasistencias ORDER BY horariodesalida DESC');
-                      $query->execute();
+                    <?php
+                    include_once 'php/conexion.php';
+                    $bd = new BD();
+                    $conexion = $bd->connect();
+                    // Modificar la consulta para obtener solo los 5 últimos registros
+                    $query = $conexion->prepare('SELECT * FROM bdunertest.t_planilladeasistencias ORDER BY horariodesalida DESC LIMIT 5');
+                    $query->execute();
 
-                      foreach ($query as $currentUser) { ?>
-                        <tr>
-                          <td><?php echo htmlspecialchars($currentUser['nomyape']); ?></td>
-                          <td><?php echo htmlspecialchars($currentUser['horariodeentrada']); ?></td>
-                          <td><?php echo htmlspecialchars($currentUser['horariodesalida']); ?></td>
-                          <td>$ <?php echo htmlspecialchars($currentUser['cajainicial']); ?></td>
-                          <td>$ <?php echo htmlspecialchars($currentUser['cajafinal']); ?></td>
-                          <td>$ <?php echo htmlspecialchars($currentUser['recaudado']); ?></td>
-                        </tr>
-                      <?php }
-                      $query = null;
-                      $conexion = null;
+                    foreach ($query as $currentUser) { ?>
+                      <tr>
+                        <td><?php echo htmlspecialchars($currentUser['nomyape']); ?></td>
+                        <td><?php echo htmlspecialchars($currentUser['horariodeentrada']); ?></td>
+                        <td><?php echo htmlspecialchars($currentUser['horariodesalida']); ?></td>
+                        <td>$ <?php echo htmlspecialchars($currentUser['cajainicial']); ?></td>
+                        <td>$ <?php echo htmlspecialchars($currentUser['cajafinal']); ?></td>
+                        <td>$ <?php echo htmlspecialchars($currentUser['recaudado']); ?></td>
+                      </tr>
+                    <?php }
+                    $query = null;
+                    $conexion = null;
                     ?>
                   </tbody>
                 </table>
