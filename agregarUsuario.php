@@ -1,15 +1,15 @@
-<?php 
+<?php
 
-  session_start();
+session_start();
 
-  if(!isset($_SESSION['username'])){
-    $errorLogin= "Debe registrarse primero<br>";
-    header('location: ../login.php?errorLogin='.$errorLogin);
-  }{
-    if($_SESSION['rol'] != 1){
-    header('location: php/definirRutas.php');  
-    }
-  }
+if (!isset($_SESSION['username'])) {
+  $errorLogin = "Debe registrarse primero<br>";
+  header('location: ../login.php?errorLogin=' . urlencode($errorLogin));
+  exit;
+} elseif ($_SESSION['rol'] != 1) {
+  header('location: php/definirRutas.php');
+  exit;
+}
 
 ?>
 <!DOCTYPE html>
@@ -39,11 +39,11 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-    <?php 
-      include 'navegacionLateral.php'; 
+    <?php
+    include 'navegacionLateral.php';
     ?>
 
-     <!--Content Wrapper -->
+    <!--Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
       <!-- Main Content -->
@@ -56,66 +56,60 @@
 
           <!-- Page Heading -->
           <h1 class="h3 mb-4 text-gray-800">Agregar usuario al sistema</h1>
-          <?php if(isset($_GET['info'])){ ?>
-            <div class="alert alert-success" role="alert" style="text-align: center;">
-              <?php 
-                if(isset($_GET['info'])){
-                    echo $_GET['info'];
-                  }
-              ?>
+
+          <?php if (isset($_GET['info'])) : ?>
+            <div class="alert alert-success text-center" role="alert">
+              <?= htmlspecialchars($_GET['info']); ?>
             </div>
-          <?php } ?>
-          <?php if(isset($_GET['error'])){ ?>
-            <div class="alert alert-danger" role="alert" style="text-align: center;">
-              <?php 
-                if(isset($_GET['error'])){
-                    echo $_GET['error'];
-                  }
-              ?>
+          <?php endif; ?>
+          <?php if (isset($_GET['error'])) : ?>
+            <div class="alert alert-danger text-center" role="alert">
+              <?= htmlspecialchars($_GET['error']); ?>
             </div>
-          <?php } ?>
+          <?php endif; ?>
+
           <form action="agregarUsuarioBD.php" method="post">
             <div class="form-row">
               <div class="form-group col-md-3">
-                <label for="inputEmail4">Nombre del usuario</label>
-                <input type="text" class="form-control" id="inputEmail4" placeholder="" name="nombredelusuario">
+                <label for="nombreCompletoDelUsuario">Nombre completo del usuario</label>
+                <input type="text" class="form-control" id="nombreCompletoDelUsuario" placeholder="" name="nombreCompletoDelUsuario">
               </div>
               <div class="form-group col-md-3">
-                <label for="inputEmail4">Nombre en el sistema</label>
-                <input type="text" class="form-control" id="inputEmail4" placeholder="" name="nombreenelsistema">
+                <label for="nombreEnElSistema">Nombre en el sistema</label>
+                <input type="text" class="form-control" id="nombreEnElSistema" placeholder="" name="nombreEnElSistema">
               </div>
               <div class="form-group col-md-3">
-                <label for="inputPassword4">Identificador</label>
-                <input type="text" class="form-control" id="inputPassword4" placeholder="" name="identificador">
+                <label for="identificador">Identificador (DNI o CUIT)</label>
+                <input type="text" class="form-control" id="identificador" placeholder="" name="identificador">
               </div>
               <div class="form-group col-md-3">
-                <label for="inputCity">Telefono</label>
+                <label for="telefono">Telefono</label>
                 <div class="input-group mb-2">
                   <div class="input-group-prepend">
                     <div class="input-group-text"><i class="fas fa-phone-alt"></i></div>
                   </div>
-                  <input type="number" class="form-control" id="inputCity" name="telefono">
+                  <input type="number" class="form-control" id="telefono" name="telefono">
                 </div>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-3">
-                <label for="inputPassword4">Contraseña</label>
-                <input type="text" class="form-control" id="inputPassword4" placeholder="" name="contrasenia">
+                <label for="contrasenia">Contraseña</label>
+                <input type="text" class="form-control" id="contrasenia" placeholder="" name="contrasenia">
               </div>
               <div class="form-group col-md-5">
-                <label for="inputCity">Rol</label>
-                <select class="form-control" id="exampleFormControlSelect1" name="rolusuario"> 
-                    <option value="so">Elija una opcion</option>
-                    <option value="1">Administrador</option>
-                    <option value="2">Becario Cantina</option>
-                    <option value="3">Becario Fotocopiadora</option>
-                    <option value="4">Vendedor de Entradas</option>
+                <label for="rolUsuario">Rol</label>
+                <select class="form-control" id="rolUsuario" name="rolUsuario">
+                  <option value="so">Elija una opcion</option>
+                  <option value="1">Administrador</option>
+                  <option value="2">Becario Cantina</option>
+                  <option value="3">Becario Fotocopiadora</option>
+                  <option value="4">Vendedor de Entradas</option>
                 </select>
               </div>
               <div class="form-group col-md-4">
-                <label for="inputCity">Correo electronico</label>
-                <input type="text" class="form-control" id="inputCity" name="correo">
+                <label for="correo">Correo electronico</label>
+                <input type="text" class="form-control" id="correo" name="correo">
               </div>
             </div>
             <button type="submit" class="btn btn-primary">Cargar</button>

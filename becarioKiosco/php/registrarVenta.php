@@ -6,19 +6,20 @@ $data = json_decode(file_get_contents("php://input"), true);
 $productos = $data['productosVendidos'];
 $total = $data['total'];
 $metodo_pago = $data['metodoPago'];
+$lugar_venta = "Cantina";
 
 session_start();
 
-$usuario_alta = $_SESSION['nombre']; // Usuario que realiza la venta
+$usuario_alta = $_SESSION['username']; // Usuario que realiza la venta
 
 // Iniciar una transacción para asegurar la consistencia de los datos
 mysqli_begin_transaction($conexion);
 
 try {
     // Insertar en la tabla t_ventas
-    $sqlVenta = "INSERT INTO t_ventas (total, metodo_pago, fecha_alta, usuario_alta) VALUES (?, ?, NOW(), ?)";
+    $sqlVenta = "INSERT INTO t_ventas (total, metodo_pago, lugar_venta, fecha_alta, usuario_alta) VALUES (?, ?, ?, NOW(), ?)";
     $stmtVenta = mysqli_prepare($conexion, $sqlVenta);
-    mysqli_stmt_bind_param($stmtVenta, 'dss', $total, $metodo_pago, $usuario_alta);
+    mysqli_stmt_bind_param($stmtVenta, 'dsss', $total, $metodo_pago, $lugar_venta, $usuario_alta);
     mysqli_stmt_execute($stmtVenta);
 
     // Obtener el ID de la venta insertada

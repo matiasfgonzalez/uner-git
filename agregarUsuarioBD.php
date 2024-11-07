@@ -1,79 +1,82 @@
-<?php 
-	
-	$nombredelusuario = $_POST['nombredelusuario'];
-	$nombreenelsistema = $_POST['nombreenelsistema'];
-	$identificador = $_POST['identificador'];
-	$telefono = $_POST['telefono'];
-	$contrasenia = $_POST['contrasenia'];
-	$rolusuario = $_POST['rolusuario'];
-	$correo = $_POST['correo'];
+<?php
 
-	echo $nombredelusuario . "<br>";
-	echo $nombreenelsistema . "<br>";
-	echo $identificador . "<br>";
-	echo $telefono . "<br>";
-	echo $contrasenia . "<br>";
-	echo $rolusuario . "<br>";
-	echo $correo . "<br>";
+// Inicia sesión y maneja el archivo de conexión
+session_start();
+include_once 'php/conexion.php';
 
-	if($nombredelusuario == "" || $nombreenelsistema == "" || $identificador == "" || $telefono == "" || $rolusuario == "" || $correo == "" || $contrasenia == ""){
-		
-		$mensaje="Por favor, complete todos los campos.";
-        header('location: agregarUsuario.php?error='.$mensaje);
-        exit;
+$nombredelusuario = trim(isset($_POST['nombreCompletoDelUsuario']) ? $_POST['nombreCompletoDelUsuario'] : '');
+$nombreenelsistema = trim(isset($_POST['nombreEnElSistema']) ? $_POST['nombreEnElSistema'] : '');
+$identificador = trim(isset($_POST['identificador']) ? $_POST['identificador'] : '');
+$telefono = trim(isset($_POST['telefono']) ? $_POST['telefono'] : '');
+$contrasenia = trim(isset($_POST['contrasenia']) ? $_POST['contrasenia'] : '');
+$rolusuario = trim(isset($_POST['rolUsuario']) ? $_POST['rolUsuario'] : '');
+$correo = trim(isset($_POST['correo']) ? $_POST['correo'] : '');
 
-	}else if($telefono == 0){
+// Validaciones básicas de entrada
+if (empty($nombredelusuario) || empty($nombreenelsistema) || empty($identificador) || empty($telefono) || empty($rolusuario) || empty($correo) || empty($contrasenia)) {
+	$mensaje = "Por favor, complete todos los campos.";
+	header('location: agregarUsuario.php?error=' . urlencode($mensaje));
+	exit;
+}
 
-		$mensaje="Por favor, en campos de telefono no puede ser el valor 0(cero).";
-        header('location: agregarUsuario.php?error='.$mensaje);
-        exit;
+if (!is_numeric($telefono) || $telefono == 0) {
+	$mensaje = "Por favor, en el campo de teléfono no puede ser el valor 0 (cero).";
+	header('location: agregarUsuario.php?error=' . urlencode($mensaje));
+	exit;
+}
 
-	}else if($rolusuario == "so"){
+if ($rolusuario == "so") {
+	$mensaje = "Por favor, elija un rol para el usuario.";
+	header('location: agregarUsuario.php?error=' . urlencode($mensaje));
+	exit;
+}
 
-		$mensaje="Por favor, elija un rol para el usuario.";
-        header('location: agregarUsuario.php?error='.$mensaje);
-        exit;
+if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+	$mensaje = "Por favor, ingrese un correo electrónico válido.";
+	header('location: agregarUsuario.php?error=' . urlencode($mensaje));
+	exit;
+}
 
-	}else{
-		include_once 'php/conexion.php';
-	    $bd= new BD();
-	    $conexion = $bd->connect();
-	    $query= $conexion->prepare('INSERT INTO bdunertest.t_usuarios VALUES 
-                                (:id ,:username , :password, :nombre, :dnicuil, :telefono, :correo, :rol_id)');
+// Encriptar la contraseña
+$hashed_password = password_hash($contrasenia, PASSWORD_BCRYPT);
 
-	    $id= NULL;
+try {
+	$bd = new BD();
+	$conexion = $bd->connect();
+	$query = $conexion->prepare('INSERT INTO bdunertest.t_usuarios (id, username, password, nombre, dnicuil, telefono, correo, rol_id) 
+                                  VALUES (:id, :username, :password, :nombre, :dnicuil, :telefono, :correo, :rol_id)');
 
-	    $query->bindParam(':id', $id);
-	    $query->bindParam(':username', $nombreenelsistema);
-	    $query->bindParam(':password', $contrasenia);
-	    $query->bindParam(':nombre', $nombredelusuario);
-	    $query->bindParam(':dnicuil', $identificador);
-	    $query->bindParam(':telefono', $telefono);
-	    $query->bindParam(':correo', $correo);
-	    $query->bindParam(':rol_id', $rolusuario);
-            
-        $query->execute();
-        $query = NULL;
-        $conexion = NULL;
+	$id = NULL;
+	$query->bindParam(':id', $id);
+	$query->bindParam(':username', $nombreenelsistema);
+	$query->bindParam(':password', $hashed_password);
+	$query->bindParam(':nombre', $nombredelusuario);
+	$query->bindParam(':dnicuil', $identificador);
+	$query->bindParam(':telefono', $telefono);
+	$query->bindParam(':correo', $correo);
+	$query->bindParam(':rol_id', $rolusuario);
 
-        $rolusuariotexto = "";
-        switch ($rolusuario) {
-        	case '1':
-        		$rolusuariotexto = "Administrador";
-        		break;
-        	case '2':
-        		$rolusuariotexto = "Becario Cantina";
-        		break;
-        	case '3':
-        		$rolusuariotexto = "Becario Fotocopiadora";
-        		break;
-        	case '4':
-        		$rolusuariotexto = "Vendedor de Entradas";
-        		break;
-        }
+	// Ejecutar la consulta y cerrar la conexión
+	$query->execute();
 
-		$mensaje="Se cargo exitosamente el usuario " . $nombredelusuario . " con el rol " . $rolusuariotexto;
-		header('location: agregarUsuario.php?info='.$mensaje);
-        exit;
-	}
-?>
+	// Definir el rol de usuario para el mensaje de éxito
+	$roles = [
+		'1' => "Administrador",
+		'2' => "Becario Cantina",
+		'3' => "Becario Fotocopiadora",
+		'4' => "Vendedor de Entradas"
+	];
+	$rolusuariotexto = isset($roles[$rolusuario]) ? $roles[$rolusuario] : "Rol desconocido";
+
+	$mensaje = "Se cargó exitosamente el usuario " . htmlspecialchars($nombredelusuario) . " con el rol " . htmlspecialchars($rolusuariotexto);
+	header('location: agregarUsuario.php?info=' . urlencode($mensaje));
+	exit;
+} catch (PDOException $e) {
+	// Error en la conexión o ejecución de la consulta
+	$mensaje = "Error al cargar el usuario. Por favor, inténtelo más tarde.";
+	header('location: agregarUsuario.php?error=' . urlencode($mensaje));
+	exit;
+} finally {
+	$query = null;
+	$conexion = null;
+}
